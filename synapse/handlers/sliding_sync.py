@@ -604,7 +604,7 @@ class SlidingSyncHandler:
             room_sync_result = await self.get_room_sync_data(
                 user=sync_config.user,
                 room_id=room_id,
-                room_sync_config=room_sync_config,
+                room_sync_config=relevant_room_map[room_id],
                 room_membership_for_user_at_to_token=room_membership_for_user_map[
                     room_id
                 ],
