@@ -482,13 +482,10 @@ class SlidingSyncHandler:
                 # Apply filters
                 filtered_sync_room_map = sync_room_map
 
-                if list_config.filters:
+                if list_config.filters is not None:
 
                     filtered_sync_room_map = await self.filter_rooms(
-                        sync_config.user,
-                        filtered_sync_room_map,
-                        list_config.filters,
-                        to_token,
+                        sync_config.user, sync_room_map, list_config.filters, to_token
                     )
 
                 # Sort the list
@@ -665,7 +662,7 @@ class SlidingSyncHandler:
         room_for_user_list = (
             await self.store.get_rooms_for_local_user_where_membership_is(
                 user_id=user_id,
-                membership_list=Membership.LIST,
+                membership_list=frozenset(Membership.LIST),
                 excluded_rooms=self.rooms_to_exclude_globally,
             )
         )
