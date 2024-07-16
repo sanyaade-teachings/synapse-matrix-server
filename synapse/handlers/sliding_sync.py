@@ -1949,6 +1949,7 @@ class SlidingSyncRoomStore:
         conn_id: str,
         prev_store_token: int,
         last_room_token: RoomStreamToken,
+        *,
         new_sent_room_ids: StrCollection,
         new_missing_room_ids: StrCollection,
     ) -> int:
