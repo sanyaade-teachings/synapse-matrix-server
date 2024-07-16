@@ -1981,12 +1981,12 @@ class SlidingSyncRoomStore:
         # Copy over and update the room mappings.
         new_room_statuses = dict(sync_statuses.get(prev_store_token, {}))
 
-        for room_id in new_sent_room_ids:
-            new_room_statuses[room_id] = HAVE_SENT_ROOM_LIVE
-
         # Whether we have updated the `new_room_statuses`, if we don't by the
         # end we can treat this as a noop.
-        have_updated = bool(new_sent_room_ids)
+        have_updated = False
+        for room_id in new_sent_room_ids:
+            new_room_statuses[room_id] = HAVE_SENT_ROOM_LIVE
+            have_updated = True
 
         previously_state = HaveSentRoom.previously(last_room_token)
         for room_id in new_missing_room_ids:
