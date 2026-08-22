@@ -37,10 +37,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-a3182bd5.js";
+            window.path_to_searchindex_js = "searchindex-cf21f0fd.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-4dc10a98.js"></script>
+        <script src="toc-64310643.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -241,9 +241,9 @@ a response of <code>+PONG</code>.</p>
 virtualenv, these can be installed with:</p>
 <pre><code class="language-sh">pip install "matrix-synapse[redis]"
 </code></pre>
-<p>Note that these dependencies are included when synapse is installed with <code>pip install matrix-synapse[all]</code>. They are also included in the debian packages from
-<code>packages.matrix.org</code> and in the docker images at
-https://hub.docker.com/r/ectorim/synapse/.</p>
+<p>Note that these dependencies are included when Synapse is installed with <code>pip install matrix-synapse[all]</code>. They are also included in the <a href="setup/installation.html#debianubuntu">Debian
+packages</a> and in the <a href="setup/installation.html#docker-images-and-ansible-playbooks">Docker
+images</a>.</p>
 <p>To make effective use of the workers, you will need to configure an HTTP
 reverse-proxy such as nginx or haproxy, which will direct incoming requests to
 the correct worker, or to the main synapse instance. See
@@ -408,6 +408,7 @@ information.</p>
 ^/_matrix/client/(v1|unstable)/rooms/.*/relations/
 ^/_matrix/client/v1/rooms/.*/threads$
 ^/_matrix/client/unstable/im.nheko.summary/summary/.*$
+^/_matrix/client/v1/room_summary/.*$
 ^/_matrix/client/(r0|v3|unstable)/account/3pid$
 ^/_matrix/client/(r0|v3|unstable)/account/whoami$
 ^/_matrix/client/(r0|v3|unstable)/account/deactivate$
@@ -502,13 +503,6 @@ using):</p>
 For multiple workers not handling the SSO endpoints properly, see
 <a href="https://github.com/matrix-org/synapse/issues/7530">#7530</a> and
 <a href="https://github.com/matrix-org/synapse/issues/9427">#9427</a>.</p>
-<p>Additionally, when MSC3861 is enabled (<code>experimental_features.msc3861.enabled</code>
-set to <code>true</code>), the following endpoints can be handled by the worker:</p>
-<pre><code>^/_synapse/admin/v2/users/[^/]+$
-^/_synapse/admin/v1/username_available$
-^/_synapse/admin/v1/users/[^/]+/_allow_cross_signing_replacement_without_uia$
-^/_synapse/admin/v1/users/[^/]+/devices$
-</code></pre>
 <p>Note that a <a href="usage/configuration/config_documentation.html#listeners">HTTP listener</a>
 with <code>client</code> and <code>federation</code> <code>resources</code> must be configured in the
 <a href="usage/configuration/config_documentation.html#worker_listeners"><code>worker_listeners</code></a>
@@ -717,6 +711,17 @@ configured as stream writer for the <code>device_lists</code> stream:</p>
 ^/_matrix/client/(r0|v3|unstable)/keys/upload
 ^/_matrix/client/(api/v1|r0|v3|unstable)/keys/device_signing/upload$
 ^/_matrix/client/(api/v1|r0|v3|unstable)/keys/signatures/upload$
+</code></pre>
+<h5 id="the-quarantined_media_changes-stream"><a class="header" href="#the-quarantined_media_changes-stream">The <code>quarantined_media_changes</code> stream</a></h5>
+<p>The <code>quarantined_media_changes</code> stream supports multiple writers. The following endpoints
+must be routed directly to one of the workers configured as stream writer for the
+<code>quarantined_media_changes</code> stream (which must also be able to run the media
+repository, as these endpoints are only registered on media-capable workers):</p>
+<pre><code>^/_synapse/admin/v1/quarantine_media/.*$
+^/_synapse/admin/v1/room/.*/media/quarantine$
+^/_synapse/admin/v1/user/.*/media/quarantine$
+^/_synapse/admin/v1/media/quarantine/.*$
+^/_synapse/admin/v1/media/unquarantine/.*$
 </code></pre>
 <h4 id="restrict-outbound-federation-traffic-to-a-specific-set-of-workers"><a class="header" href="#restrict-outbound-federation-traffic-to-a-specific-set-of-workers">Restrict outbound federation traffic to a specific set of workers</a></h4>
 <p>The
